@@ -11,6 +11,7 @@ no warnings 'utf8';
 our @EXPORT    = qw( prompt );
 our @EXPORT_OK = qw( hand_print get_input );
 
+use Scalar::Util;
 use IO::Handle;
 use Term::ReadKey;
 use POSIX qw( isprint );
@@ -185,7 +186,7 @@ sub prompt {
     else {
         no strict 'refs';
         my $ARGV = $caller . "::ARGV";
-        unless (*$ARGV->opened) {
+        unless (Scalar::Util::openhandle(*$ARGV)) {
             $$ARGV = shift(@$ARGV) || '-';
             open $ARGV or croak "Can't open $$ARGV: $!";
         }
